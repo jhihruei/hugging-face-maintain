@@ -1,0 +1,24 @@
+name: Deploy Space
+run-name: Deploy to space
+
+on:
+  push:
+    branches:
+      - '**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  run_deploy_tool:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Run deploy tool
+        run: python3 .github/tools/deploy_to_space.py --branch_name="${{ github.ref_name }}" --user_token="${{ secrets.HF_TOKEN }}"
