@@ -2,18 +2,19 @@ import argparse
 import subprocess
 import sys
 
+from config import SPACE_CONFIG
+from model import Space
+
 DEFAULT_USER = "jy-raychen"
-DEFAULT_SPACE_OWNER = "jy-raychen"
-DEFAULT_SPACE_NAME = "example"
 
 
-def force_push_to_remote(token, branch_name):
+def force_push_to_remote(space: Space, token: str, branch_name: str):
     proc = subprocess.run(
         [
             "git",
             "push",
             "--force",
-            f"https://{DEFAULT_USER}:{token}@huggingface.co/spaces/{DEFAULT_SPACE_OWNER}/{DEFAULT_SPACE_NAME}",
+            f"https://{DEFAULT_USER}:{token}@huggingface.co/spaces/{space.owner}/{space.name}",
             f"{branch_name}:main",
         ],
         capture_output=True,
@@ -34,7 +35,9 @@ if __name__ == "__main__":
     parser.add_argument("--user_token", required=True)
     args = parser.parse_args()
 
-    push_result = force_push_to_remote(args.user_token, args.branch_name)
+    space = Space(SPACE_CONFIG["default"])
+
+    push_result = force_push_to_remote(space, args.user_token, args.branch_name)
     if not push_result:
         sys.exit(1)
     print(push_result)
