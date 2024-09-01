@@ -30,4 +30,4 @@ jobs:
             git commit -m "[skip ci] update README.md"
           fi
       - name: Run deploy tool
-        run: python3 .github/tools/deploy_to_space.py --branch_name="${{ github.ref_name }}" --user_token="${{ secrets.HF_TOKEN }}"
+        run: python3 .github/tools/deploy_to_space.py --branch_name="${{ github.ref_name }}" --username="${{ vars.HF_USERNAME }}" --user_token="${{ secrets.HF_TOKEN }}"
