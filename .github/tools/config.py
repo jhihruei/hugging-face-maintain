@@ -4,7 +4,7 @@ from model import Config
 
 UserName = Literal["default"]
 
-SPACE_CONFIG: Dict[UserName, Config] = {
+PRODUCTION_SPACE_CONFIG: Dict[UserName, Config] = {
     "default": {
         "space_name": "example",
         "space_owner": "jy-raychen",

@@ -1,6 +1,6 @@
 import sys
 
-from config import SPACE_CONFIG
+from config import PRODUCTION_SPACE_CONFIG
 from model import ReadMe, Space
 
 DEFAULT_USER = "jy-raychen"
@@ -22,7 +22,7 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 
 if __name__ == "__main__":
-    space = Space(SPACE_CONFIG["default"])
+    space = Space(PRODUCTION_SPACE_CONFIG["default"])
 
     readme = readme_template(space.readme)
     print(readme)

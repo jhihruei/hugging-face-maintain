@@ -1,10 +1,10 @@
-name: Deploy Space
-run-name: Deploy to space
+name: Deploy Production
+run-name: Deploy to production space
 
 on:
   push:
     branches:
-      - '**'
+      - 'main'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
