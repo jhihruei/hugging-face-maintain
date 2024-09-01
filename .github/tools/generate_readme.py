@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 from config import PRODUCTION_SPACE_CONFIG
@@ -22,7 +23,17 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 
 if __name__ == "__main__":
-    space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    parser = argparse.ArgumentParser(
+        description="Generate Hugging Face space config file (i.e. README.md)."
+    )
+    parser.add_argument("--mode", required=True, choices=["prod", "dev"])
+    args = parser.parse_args()
+
+    if args.mode == "prod":
+        space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    elif args.mode == "dev":
+        # TODO: Use dev space config when deploy to dev environment.
+        space = Space(PRODUCTION_SPACE_CONFIG["default"])
 
     readme = readme_template(space.readme)
     print(readme)

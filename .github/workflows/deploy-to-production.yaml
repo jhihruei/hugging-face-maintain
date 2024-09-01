@@ -22,7 +22,7 @@ jobs:
           fetch-depth: '0'
       - name: Update Repo README.md
         run: |
-          python3 .github/tools/generate_readme.py > README.md
+          python3 .github/tools/generate_readme.py --mode="prod" > README.md
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions[bot]"
           git add ./README.md
@@ -30,4 +30,9 @@ jobs:
             git commit -m "[skip ci] update README.md"
           fi
       - name: Run deploy tool
-        run: python3 .github/tools/deploy_to_space.py --branch_name="${{ github.ref_name }}" --username="${{ vars.HF_USERNAME }}" --user_token="${{ secrets.HF_TOKEN }}"
+        run: |
+          python3 .github/tools/deploy_to_space.py \
+            --mode="prod" \
+            --branch_name="${{ github.ref_name }}" \
+            --username="${{ vars.HF_USERNAME }}" \
+            --user_token="${{ secrets.HF_TOKEN }}"

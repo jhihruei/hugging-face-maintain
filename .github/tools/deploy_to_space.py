@@ -32,10 +32,14 @@ if __name__ == "__main__":
     parser.add_argument("--branch_name", required=True)
     parser.add_argument("--username", required=True)
     parser.add_argument("--user_token", required=True)
+    parser.add_argument("--mode", required=True, choices=["prod", "dev"])
     args = parser.parse_args()
 
-    # TODO: Use different space config when deploy to dev environment.
-    space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    if args.mode == "prod":
+        space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    elif args.mode == "dev":
+        # TODO: Use dev space config when deploy to dev environment.
+        space = Space(PRODUCTION_SPACE_CONFIG["default"])
 
     push_result = force_push_to_remote(
         space, args.username, args.user_token, args.branch_name
