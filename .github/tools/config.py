@@ -21,7 +21,7 @@ PRODUCTION_SPACE_CONFIG: Dict[ProductionSpace, Config] = {
     }
 }
 
-UserName = Literal["default"]
+UserName = Literal["default", "jhihruei"]
 
 DEV_SPACE_CONFIG: Dict[UserName, Config] = {
     "default": {
@@ -34,6 +34,20 @@ DEV_SPACE_CONFIG: Dict[UserName, Config] = {
             "color_to": "indigo",
             "sdk": "gradio",
             "sdk_version": "4.36.0",
+            "app_file": "app.py",
+            "pinned": False,
+        },
+    },
+    "jhihruei": {
+        "space_name": "personal-dev",
+        "space_owner": "jy-raychen",
+        "space_readme": {
+            "title": "Personal Developing",
+            "emoji": "🏢",
+            "color_from": "yellow",
+            "color_to": "indigo",
+            "sdk": "gradio",
+            "sdk_version": "4.21.0",
             "app_file": "app.py",
             "pinned": False,
         },
