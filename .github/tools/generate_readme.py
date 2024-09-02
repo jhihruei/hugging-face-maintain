@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from config import PRODUCTION_SPACE_CONFIG
+from config import DEV_SPACE_CONFIG, PRODUCTION_SPACE_CONFIG
 from model import ReadMe, Space
 
 DEFAULT_USER = "jy-raychen"
@@ -30,10 +30,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == "prod":
-        space = Space(PRODUCTION_SPACE_CONFIG["default"])
+        space = Space(PRODUCTION_SPACE_CONFIG["production"])
     elif args.mode == "dev":
-        # TODO: Use dev space config when deploy to dev environment.
-        space = Space(PRODUCTION_SPACE_CONFIG["default"])
+        space = Space(DEV_SPACE_CONFIG["default"])
 
     readme = readme_template(space.readme)
     print(readme)
