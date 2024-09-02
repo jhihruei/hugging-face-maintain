@@ -1,13 +1,15 @@
-name: Deploy Production
-run-name: Deploy to production space
+name: Deploy Dev 
+run-name: Deploy to dev space
 
 on:
   push:
     branches:
-      - 'main'
+      - '**'
+      - '!main'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
+  # NOTE: The same actor will deploy to the same space, so we should cancel other earlier jobs.
+  group: ${{ github.workflow }}-${{ github.actor }}
   cancel-in-progress: true
 
 jobs:
@@ -22,7 +24,7 @@ jobs:
           fetch-depth: '0'
       - name: Update Repo README.md
         run: |
-          python3 .github/tools/generate_readme.py --mode="prod" > README.md
+          python3 .github/tools/generate_readme.py --mode="dev" --deployer="${{ github.actor }}" > README.md
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions[bot]"
           git add ./README.md
@@ -32,7 +34,8 @@ jobs:
       - name: Run deploy tool
         run: |
           python3 .github/tools/deploy_to_space.py \
-            --mode="prod" \
+            --mode="dev" \
+            --deployer="${{ github.actor }}" \
             --branch_name="${{ github.ref_name }}" \
             --username="${{ vars.HF_USERNAME }}" \
             --user_token="${{ secrets.HF_TOKEN }}"

@@ -2,7 +2,7 @@ import argparse
 import subprocess
 import sys
 
-from config import PRODUCTION_SPACE_CONFIG
+from config import DEV_SPACE_CONFIG, PRODUCTION_SPACE_CONFIG
 from model import Space
 
 
@@ -32,10 +32,24 @@ if __name__ == "__main__":
     parser.add_argument("--branch_name", required=True)
     parser.add_argument("--username", required=True)
     parser.add_argument("--user_token", required=True)
+    parser.add_argument("--mode", required=True, choices=["prod", "dev"])
+    parser.add_argument(
+        "--deployer",
+        help="The actor in Github Actions, it used to choose space config in dev mode.",
+    )
     args = parser.parse_args()
 
-    # TODO: Use different space config when deploy to dev environment.
-    space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    try:
+        if args.mode == "prod":
+            space = Space(PRODUCTION_SPACE_CONFIG["production"])
+        elif args.mode == "dev":
+            space_config = DEV_SPACE_CONFIG.get(
+                args.deployer, DEV_SPACE_CONFIG["default"]
+            )
+            space = Space(space_config)
+    except Exception:
+        print("Error: The space is not set correctly!")
+        sys.exit(1)
 
     push_result = force_push_to_remote(
         space, args.username, args.user_token, args.branch_name

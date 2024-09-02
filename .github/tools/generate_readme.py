@@ -1,6 +1,7 @@
+import argparse
 import sys
 
-from config import PRODUCTION_SPACE_CONFIG
+from config import DEV_SPACE_CONFIG, PRODUCTION_SPACE_CONFIG
 from model import ReadMe, Space
 
 DEFAULT_USER = "jy-raychen"
@@ -22,7 +23,27 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 
 if __name__ == "__main__":
-    space = Space(PRODUCTION_SPACE_CONFIG["default"])
+    parser = argparse.ArgumentParser(
+        description="Generate Hugging Face space config file (i.e. README.md)."
+    )
+    parser.add_argument("--mode", required=True, choices=["prod", "dev"])
+    parser.add_argument(
+        "--deployer",
+        help="The actor in Github Actions, it used to choose space config in dev mode.",
+    )
+    args = parser.parse_args()
+
+    try:
+        if args.mode == "prod":
+            space = Space(PRODUCTION_SPACE_CONFIG["production"])
+        elif args.mode == "dev":
+            space_config = DEV_SPACE_CONFIG.get(
+                args.deployer, DEV_SPACE_CONFIG["default"]
+            )
+            space = Space(space_config)
+    except Exception:
+        print("Error: The space is not set correctly!")
+        sys.exit(1)
 
     readme = readme_template(space.readme)
     print(readme)
