@@ -8,7 +8,8 @@ on:
       - '!main'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
+  # NOTE: The same actor will deploy to the same space, so we should cancel other earlier jobs.
+  group: ${{ github.workflow }}-${{ github.actor }}
   cancel-in-progress: true
 
 jobs:
